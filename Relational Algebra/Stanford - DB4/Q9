@@ -2,9 +2,9 @@
 
 
 
-//Al haber hecho la reunión natural de la línea 14, quedan tuplas con 3 atributos: pizzeria, pizza, pizza1.
-//Dado que l reunión natural ejecuta un producto cartesiano durante su operación, es posible que tengamos tuplas 
-//en las que pizza1 y pizza sean iguales, las cuales no nos interesan. Sin embargo, si dichos atributos son diferentes,
+//Al haber hecho la reunión natural de la línea 14, quedan tuplas con 3 atributos: pizzeria, pizza, pizzacomp.
+//Dado que la reunión natural ejecuta un producto cartesiano durante su operación, es posible que tengamos tuplas 
+//en las que pizzacomp y pizza sean iguales, las cuales no nos interesan. Sin embargo, si dichos atributos son diferentes,
 //significan que venden ambas pizzas.
 
 \project_{pizzeria}
@@ -31,9 +31,8 @@ Serves
 \join
 
 
-//Líneas 37-26: Pizzerias que venden al menos una de las pizzas que come la gente mayor a 30
-//Se usa un renombramiento para crear tuplas de 3 atributos 
-//luego de la reunión natural de la línea 14 
+//Líneas 36-56: Pizzerias que venden al menos una de las pizzas que come la gente mayor a 30
+//Se usa un renombramiento para crear tuplas de 3 atributos luego de la reunión natural de la línea 14 
 (
 \project_{pizzeria,pizzacomp}
 \rename_{pizzeria,pizzacomp,price} 
