@@ -1,0 +1,58 @@
+//Find all pizzerias that serve every pizza eaten by people over 30. 
+
+
+
+//Al haber hecho la reunión natural de la línea 14, quedan tuplas con 3 atributos: pizzeria, pizza, pizza1.
+//Dado que l reunión natural ejecuta un producto cartesiano durante su operación, es posible que tengamos tuplas 
+//en las que pizza1 y pizza sean iguales, las cuales no nos interesan. Sin embargo, si dichos atributos son diferentes,
+//significan que venden ambas pizzas.
+
+\project_{pizzeria}
+\select_{pizza<>pizzacomp} //Líneas 11-20: Pizzerias que venden al menos una de las pizzas que come la gente mayor a 30
+(
+(
+\project_{pizzeria,pizza}
+(
+Serves
+
+\join
+
+(
+(
+\project_{pizza} 
+(
+\select_{age>30} (Person \join Eats)
+)
+)
+)
+)
+)
+
+\join
+
+
+//Líneas 37-26: Pizzerias que venden al menos una de las pizzas que come la gente mayor a 30
+//Se usa un renombramiento para crear tuplas de 3 atributos 
+//luego de la reunión natural de la línea 14 
+(
+\project_{pizzeria,pizzacomp}
+\rename_{pizzeria,pizzacomp,price} 
+(
+Serves
+
+\join
+
+(
+(
+(
+\project_{pizza} 
+(
+\select_{age>30} (Person \join Eats)
+)
+)
+)
+)
+)
+)
+);
+
