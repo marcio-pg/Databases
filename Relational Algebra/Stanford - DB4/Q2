@@ -5,8 +5,12 @@
 
 \project_{name} (
 \select_{pizzeria='Straw Hat'} Serves 
+
 \join 
+
 Eats 
+
 \join 
+
 \select_{gender='female'} Person
 );
