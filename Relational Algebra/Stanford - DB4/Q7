@@ -23,5 +23,4 @@
 \select_{pizza='mushroom'} (Person \join Eats)
 )
 )
-)                                           
-;
+);
