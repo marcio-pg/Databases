@@ -2,7 +2,6 @@
 //(Note: The pizza need not be eaten at Straw Hat.)
 
 
-
 \project_{name} (
 \select_{pizzeria='Straw Hat'} Serves 
 
