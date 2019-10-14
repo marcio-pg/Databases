@@ -1,0 +1,19 @@
+# SQL Lesson 9: Queries with expressions
+# https://sqlbolt.com/lesson/select_queries_with_expressions
+
+
+1. **List all movies and their combined sales in millions of dollars**
+
+SELECT Title, ((Domestic_sales+International_sales)/1000000) as Sales
+FROM movies JOIN Boxoffice ON movies.id=Boxoffice.movie_id;
+
+2. **List all movies and their ratings in percent**
+
+SELECT Title, Rating*10 as '% Rating'
+FROM movies JOIN Boxoffice ON movies.id=Boxoffice.movie_id;
+
+3. **List all movies that were released on even number years**
+
+SELECT Title
+FROM movies
+WHERE Year%2=0;
