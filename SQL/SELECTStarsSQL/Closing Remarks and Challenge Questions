@@ -1,0 +1,79 @@
+1. Find the most networked senator. That is, the one with the most mutual cosponsorships.
+A mutual cosponsorship refers to two senators who have each cosponsored a bill sponsored by the other. Even if a pair of senators have  cooperated on many bills, the relationship still counts as one.
+
+
+##A continuación se usa una consulta recursiva en una Expresión de Tabla Común para identificar las relaciones entre patrocinadores y copatrocinadores, haciendo una reunión sobre aquellos patrocinadores que fueron copatrocinadores de su copatrocinador (mutuo patrocinio). DISTINCT se usa porque es posible que hayan duplicados cuando este tipo de patrocinio se haya producido en más de una ley.
+
+WITH cosponsorship AS 
+(
+  SELECT DISTINCT
+  sponsors.sponsor_name AS senator_sponsor,
+  cosponsors.sponsor_name AS senator_cosponsor
+  FROM cosponsors AS sponsors 
+  JOIN cosponsors 
+  ON sponsors.cosponsor_name=cosponsors.sponsor_name
+  AND sponsors.sponsor_name=cosponsors.cosponsor_name
+)
+
+SELECT senator_sponsor, COUNT(*) AS mutual_count
+FROM cosponsorship
+GROUP BY senator_sponsor
+ORDER BY mutual_count DESC
+LIMIT 1
+
+
+
+---------------
+2. Now find the most networked senator from each state.
+If multiple senators tie for top, show both. Return columns corresponding to state, senator and mutual cosponsorship count.
+
+
+##Primero se usa una Expresión de Tabla Común (CTE) que contiene una subconsulta anidada en la cláusula FROM que consiste en el listado de la relación de mutuo patrocinio del punto anterior. La consulta externa obtiene cuantas (COUNT(*)) de estas relaciones de mutuo patrocinio se produjeron por cada senador (cláusula GROUP BY) 
+
+WITH cosponsorship AS
+(
+  SELECT sponsor_state, senator_sponsor, COUNT(*) AS mutual_count
+  FROM
+  (	SELECT DISTINCT
+	sponsors.sponsor_name AS senator_sponsor,
+	sponsors.sponsor_state,
+	cosponsors.sponsor_name AS senator_cosponsor
+	FROM cosponsors AS sponsors 
+	JOIN cosponsors 
+	ON sponsors.cosponsor_name=cosponsors.sponsor_name
+	AND sponsors.sponsor_name=cosponsors.cosponsor_name
+  )
+  GROUP BY senator_sponsor
+),
+
+##Esta Expresión de Tabla Común (CTE) se usa para obtener el número máximo de relaciones por cada estado, proveniente de la lista de senadores con conteo de relaciones de mutuo patrocinio que se generó en la CTE de arriba.
+
+top_sponsors AS
+  (
+	SELECT sponsor_state AS state, MAX(mutual_count) as max_by_state
+	FROM cosponsorship
+	GROUP BY state
+	)
+  
+##Esta consulta identifica los senadores más conectados, mostrando sólo aquellos cuyo propio conteo de relaciones de mutuo patrocinio es igual al máximo de su respectivo estado.
+  
+SELECT sponsor_state, senator_sponsor, mutual_count
+FROM cosponsorship
+JOIN top_sponsors
+ON sponsor_state=top_sponsors.state
+WHERE mutual_count=max_by_state
+
+
+
+---------------
+3. Find the senators who cosponsored but didn't sponsor bills.
+
+##El autor de la página se complica la vida con el uso de un LEFT JOIN y NULL, cuando el asunto es extremadamente simple. Easy-peasy. 
+
+SELECT DISTINCT cosponsor_name
+FROM cosponsors
+
+EXCEPT
+
+SELECT DISTINCT sponsor_name
+FROM cosponsors
